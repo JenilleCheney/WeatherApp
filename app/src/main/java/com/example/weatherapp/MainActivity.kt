@@ -4,13 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,9 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,28 +28,27 @@ import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.ui.screens.CurrentWeather
 import com.example.weatherapp.ui.screens.DailyForecast
 import com.example.weatherapp.ui.theme.WeatherAppTheme
-import androidx.compose.ui.tooling.preview.Preview
+
 
 class MainActivity : ComponentActivity() {
+    private val mainViewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             WeatherAppTheme {
-                DisplayUI()
+                DisplayUI(mainViewModel)
             }
         }
     }
 }
 
-@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DisplayUI() {
-
+fun DisplayUI(mainViewModel: MainViewModel) {
     val navController = rememberNavController()
 
-    // Variable to store the selected value in Nav Bar
     var selectedItem by remember { mutableIntStateOf(0) }
 
     Scaffold(
@@ -65,10 +56,9 @@ fun DisplayUI() {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor =  MaterialTheme.colorScheme.primary
-                ),
-                title = {
-                    Text("Halifax Nova Scotia")
+                    titleContentColor = MaterialTheme.colorScheme.primary
+                ), title = {
+                    Text("Halifax, Nova Scotia")
                 }
             )
         },
@@ -76,14 +66,10 @@ fun DisplayUI() {
             NavigationBar(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary
-            )
-            {
-                // Navigation Bar Items go here...
-
-                // Link to CurrentWeather screen
+            ) {
                 NavigationBarItem(
                     label = {
-                        Text("Current")
+                        Text("Now")
                     },
                     icon = {
                         Icon(
@@ -98,7 +84,6 @@ fun DisplayUI() {
                     }
                 )
 
-                // Link to DailyForecast screen
                 NavigationBarItem(
                     label = {
                         Text("Weekly")
@@ -106,42 +91,31 @@ fun DisplayUI() {
                     icon = {
                         Icon(
                             painter = painterResource(R.drawable.ic_action_calendar),
-                            contentDescription = "calendar"
+                            contentDescription = "Calendar"
                         )
                     },
                     selected = selectedItem == 1,
                     onClick = {
                         selectedItem = 1
-                        navController.navigate("weekly")
+                        navController.navigate("forecast")
                     }
                 )
-
             }
         }
-    )
-    { innerPadding ->
-        // Content goes here...
-
-        // Use a Nav Host to render the screens
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = "current",
             modifier = Modifier.padding(innerPadding)
-        )
-        {
-            // Display Home screen
-            composable(route = "current")
-            {
-                CurrentWeather()
+        ) {
+
+            composable(route = "current") {
+                CurrentWeather(mainViewModel)
             }
 
-            // Display Hello screen
-            composable(route = "weekly")
-            {
-                DailyForecast()
+            composable(route = "forecast") {
+                DailyForecast(mainViewModel)
             }
         }
     }
 }
-
-

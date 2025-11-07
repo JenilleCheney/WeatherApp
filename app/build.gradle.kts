@@ -49,9 +49,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation("androidx.navigation:navigation-fragment-ktx:2.8.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.8.0")
-    implementation("androidx.navigation:navigation-compose:2.8.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,4 +56,18 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    //Navigation
+    implementation(libs.androidx.navigation.compose)
+    //Coil Images
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+// Retrofit GSON Converter
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+
+    // Google Play location service
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+    // Accompanist permissions - makes getting permissions easier
+    implementation ("com.google.accompanist:accompanist-permissions:0.34.0")
 }

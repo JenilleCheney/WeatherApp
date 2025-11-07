@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,6 +17,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +41,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WeatherAppTheme {
+            LaunchedEffect(Unit) {
+                mainViewModel.getWeather(44.6488, -63.5752)
+            }
                 DisplayUI(mainViewModel)
+
             }
         }
     }
@@ -51,6 +58,8 @@ fun DisplayUI(mainViewModel: MainViewModel) {
 
     var selectedItem by remember { mutableIntStateOf(0) }
 
+    mainViewModel.getWeather(44.6488, -63.5752)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,7 +67,11 @@ fun DisplayUI(mainViewModel: MainViewModel) {
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ), title = {
-                    Text("Halifax, Nova Scotia")
+                    val weather by mainViewModel.weather.collectAsState()
+                    Text(
+                        text ="${weather?.location?.name ?: "Loading..."}, ${weather?.location?.region ?: ""} ",
+                        style = MaterialTheme.typography.titleLarge
+                    )
                 }
             )
         },
@@ -106,7 +119,9 @@ fun DisplayUI(mainViewModel: MainViewModel) {
         NavHost(
             navController = navController,
             startDestination = "current",
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
 
             composable(route = "current") {

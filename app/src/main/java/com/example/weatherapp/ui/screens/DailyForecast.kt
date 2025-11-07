@@ -1,15 +1,16 @@
+// kotlin
 package com.example.weatherapp.ui.screens
 
-//import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Divider
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,107 +18,99 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.example.weatherapp.MainViewModel
 
-//@Preview
-@Composable
-fun DailyForecast (mainViewModel : MainViewModel) {
-    val weather by mainViewModel.weather.collectAsState()
 
-    // DailyForecast variables
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
-        modifier = Modifier.fillMaxSize()
-    ){
-        // List each forecast day in 3-day forecast
-        for(item in weather?.forecast!!){
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Divider(
+@Composable
+fun DailyForecast(mainViewModel: MainViewModel) {
+    val weather by mainViewModel.weather.collectAsState()
+    val forecastDays = weather?.forecast?.forecastDay
+    if (!forecastDays.isNullOrEmpty()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
+
+
+        ) {
+            items(forecastDays) { forecastDay ->
+                // Use the actual variables provided by the lambda
+                val day = forecastDay.day
+                val date = forecastDay.date
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    thickness = 1.dp,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-                )
-
-                Text(
-                    text = item.date,
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.padding(top = 10.dp)
-                )
-
-                Image(
-                    painter = painterResource(id = item.imageId),
-                    contentDescription = "Forecast Icon",
-                    modifier = Modifier.size(40.dp)
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 8.dp)
+                        .padding(8.dp)
                 ) {
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp), thickness = 1.dp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                    )
 
-
+                    // Show date and a simple representation of the day object.
                     Text(
-                        text = item.temperatureHigh,
-                        style = MaterialTheme.typography.titleSmall
+                        text = date,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(top = 10.dp)
+                    )
+
+                    Image(
+                        painter = rememberAsyncImagePainter("https:${day.condition.icon}"),
+                        contentDescription = "Weather Icon",
+                        modifier = Modifier
+                            .size(100.dp)
+
                     )
 
                     Text(
-                        text = item.temperatureLow,
-                        style = MaterialTheme.typography.titleSmall
+                        text="${day.condition.text}.",
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+
+                    Text(
+                        text ="Max: ${day.maxTemp}°C / Min: ${day.minTemp}°C",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+
+                    Text(
+                        text = "Chance of Rain: ${day.chanceOfRain}% " +
+                                "| Amount ${day.precipitationAmount}mm " ,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+
+                    )
+
+                    Text(
+                        text = "Humidity: ${day.avgHumidity}%" ,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Text(
+                        text=  "Maximum Wind: ${day.maxWind} kph" ,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
                     )
                 }
-
-                Text(
-                    text = item.condition,
-                    style = MaterialTheme.typography.titleSmall
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                ) {
-
-
-                    Text(
-                        text = item.precipitationType,
-                        style = MaterialTheme.typography.titleSmall
-                    )
-
-                    Text(
-                        text = item.precipitationAmount,
-                        style = MaterialTheme.typography.titleSmall
-                    )
-
-                    Text(
-                        text = item.precipitationProbability,
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                }
-
-                Text(
-                    text = item.wind,
-                    style = MaterialTheme.typography.titleSmall
-                )
-                Text(
-                    text = item.humidity,
-                    style = MaterialTheme.typography.titleSmall
-                )
-
             }
         }
     }
 }
+
 
 
 //    Column(

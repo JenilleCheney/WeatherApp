@@ -38,7 +38,8 @@ data class Forecast(
 
 data class ForecastDay(
     @SerializedName("date") val date: String,
-    @SerializedName("day") val day: Day
+    @SerializedName("day") val day: Day,
+    @SerializedName("hour") val hours: List<Hour>
 )
 
 data class Day(
@@ -51,7 +52,7 @@ data class Day(
     val condition: Condition
 )
 
-data class Day(
+data class Hour(
     @SerializedName("time") val hour:String,
     @SerializedName("temp_c") val temperature: Float,
     @SerializedName("condition") val condition: Condition,

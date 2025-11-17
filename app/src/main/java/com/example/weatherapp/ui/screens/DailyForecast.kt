@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -38,11 +39,12 @@ fun DailyForecast(mainViewModel: MainViewModel) {
             verticalArrangement = Arrangement.Top,
 
 
-        ) {
+            ) {
             items(forecastDays) { forecastDay ->
                 // Use the actual variables provided by the lambda
                 val day = forecastDay.day
                 val date = forecastDay.date
+                val hours = forecastDay.hours
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,7 +56,9 @@ fun DailyForecast(mainViewModel: MainViewModel) {
                     HorizontalDivider(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp), thickness = 1.dp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                            .padding(top = 8.dp),
+                        thickness = 1.dp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                     )
 
                     // Show date and a simple representation of the day object.
@@ -73,19 +77,19 @@ fun DailyForecast(mainViewModel: MainViewModel) {
                     )
 
                     Text(
-                        text="${day.condition.text}.",
+                        text = "${day.condition.text}.",
                         style = MaterialTheme.typography.bodyLarge,
                     )
 
                     Text(
-                        text ="Max: ${day.maxTemp}°C / Min: ${day.minTemp}°C",
+                        text = "Max: ${day.maxTemp}°C / Min: ${day.minTemp}°C",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold
                     )
 
                     Text(
                         text = "Chance of Rain: ${day.chanceOfRain}% " +
-                                "| Amount ${day.precipitationAmount}mm " ,
+                                "| Amount ${day.precipitationAmount}mm ",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -93,23 +97,68 @@ fun DailyForecast(mainViewModel: MainViewModel) {
                     )
 
                     Text(
-                        text = "Humidity: ${day.avgHumidity}%" ,
+                        text = "Humidity: ${day.avgHumidity}%",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
 
                     Text(
-                        text=  "Maximum Wind: ${day.maxWind} kph" ,
+                        text = "Maximum Wind: ${day.maxWind} kph",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
+
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        thickness = 1.dp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                    )
+
+                    //Hourly row for daily forecast
+                    if (hours.isNotEmpty()) {
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
+                        ) {
+                            items(hours) { hour ->
+
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.padding(4.dp)
+                                ) {
+                                    val timeText = hour.hour.substringAfterLast(' ')
+                                    Text(
+
+                                        text = timeText,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        textAlign = TextAlign.Center
+                                    )
+                                    Image(
+                                        painter = rememberAsyncImagePainter("https:${hour.condition.icon}"),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(36.dp)
+                                    )
+                                    Text(
+                                        text = "${hour.temperature}°",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
         }
     }
 }
+
 
 
 

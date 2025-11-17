@@ -1,12 +1,13 @@
-This is the start of an android mobile application that will display current and forecasted weather. 
-It is currently in the beginning stages and is hard coded but will be moving towards a fully functional app
-using an API
+This is a fully functional Weather App Implementing an API and displaying local weather in a current main Screen 
+as well as a daily forecast that includes a hourly breakdown for each day 
 
-![mobile screen1](https://github.com/user-attachments/assets/dfb44733-672a-4ffc-b56a-7247642dbcea)
+
 
 This is the home screen which displays the current weather
+![WeatherAppDailyscreen](https://github.com/user-attachments/assets/f35f0b10-4948-4ec8-8b9a-09978d5d0930)
 
 
-![weeklyscreen](https://github.com/user-attachments/assets/fd50d31c-34d3-4448-a6ea-91723bff251b)
+
 
 This is the display for the weekly forecast which currently has 3 days hardcoded
+![DailyForecastHourly](https://github.com/user-attachments/assets/e1dfad46-4051-41a3-80a7-1d0f24b3aec3)

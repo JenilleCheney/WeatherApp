@@ -9,7 +9,8 @@ This is the home screen which displays the current weather
 
 
 
-This is the display for the weekly forecast which currently has 3 days hardcoded
+This is the display for the weekly forecast which currently has 7 Days pulled from the API will revert to 3 after the trial
+time expires.
 
 
 ![DailyForecastHourly](https://github.com/user-attachments/assets/e1dfad46-4051-41a3-80a7-1d0f24b3aec3)
